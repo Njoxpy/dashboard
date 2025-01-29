@@ -1,136 +1,73 @@
-import { useEffect, useState } from "react";
+import React from "react";
 
 const RevenueDashboard = () => {
-  const [revenueData, setRevenueData] = useState({
-    animalFeeding: null,
-    freshOil: null,
-    godown: null,
-    hardware: null,
-    stationery: null,
-    printing: null,
-  });
-  const [period, setPeriod] = useState("day");
-
-  const fetchRevenueData = async (category, period) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/${category}/revenue?period=${period}`,
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      return data.revenue;
-    } catch (error) {
-      console.error(`Error fetching ${category} revenue:`, error);
-      return "Error fetching data";
-    }
+  // Hardcoded data
+  const revenueData = {
+    totalRevenue: 125000,
+    monthlyRevenue: 25000,
+    yearlyRevenue: 300000,
+    totalGrowth: 5.2,
+    monthlyGrowth: 2.8,
+    yearlyGrowth: 10.5,
   };
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("sw-TZ", {
-      style: "currency",
-      currency: "TZS",
-    }).format(value);
-  };
-
-  useEffect(() => {
-    const loadRevenueData = async () => {
-      const animalFeeding = await fetchRevenueData("animal-feeding", period);
-      const freshOil = await fetchRevenueData("fresh-oil", period);
-      const godown = await fetchRevenueData("godown", period);
-      const hardware = await fetchRevenueData("hardware", period);
-      const stationery = await fetchRevenueData("stationery", period);
-      const printing = await fetchRevenueData("printing", period);
-
-      setRevenueData({
-        animalFeeding,
-        freshOil,
-        godown,
-        hardware,
-        stationery,
-        printing,
-      });
-    };
-
-    loadRevenueData();
-  }, [period]);
-
-  const categories = [
-    {
-      key: "animalFeeding",
-      name: "Animal Feeding",
-      color: "bg-green-500",
-      icon: "🌿",
-    },
-    {
-      key: "freshOil",
-      name: "Fresh Oil",
-      color: "bg-yellow-500",
-      icon: "🛢️",
-    },
-    {
-      key: "godown",
-      name: "Godown",
-      color: "bg-indigo-500",
-      icon: "🏢",
-    },
-    {
-      key: "hardware",
-      name: "Hardware",
-      color: "bg-blue-500",
-      icon: "🔧",
-    },
-    {
-      key: "stationery",
-      name: "Stationery",
-      color: "bg-blue-400",
-      icon: "✏️",
-    },
-    {
-      key: "printing",
-      name: "Printing",
-      color: "bg-blue-600",
-      icon: "📃",
-    },
-  ];
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-5xl font-extrabold text-center text-gray-900 mb-12">
-        Revenue Dashboard
-      </h1>
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        Revenue Overview
+      </h2>
 
-      {/* Dropdown for selecting period */}
-      <div className="flex justify-center mb-6">
-        <select
-          className="border border-gray-300 rounded-lg p-3 text-lg bg-white shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-          value={period}
-          onChange={(e) => setPeriod(e.target.value)}
-        >
-          <option value="day">Day</option>
-          <option value="week">Week</option>
-          <option value="month">Month</option>
-        </select>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Revenue Card */}
+        <div className="bg-[#f0fdf4] p-4 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">
+            Total Revenue
+          </h3>
+          <p className="text-2xl font-bold text-[#22c55e]">
+            ${revenueData.totalRevenue.toLocaleString()}
+          </p>
+          <p className="text-sm text-[#16a34a]">
+            +{revenueData.totalGrowth}% from last month
+          </p>
+        </div>
+
+        {/* Monthly Revenue Card */}
+        <div className="bg-[#f0fdf4] p-4 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">
+            Monthly Revenue
+          </h3>
+          <p className="text-2xl font-bold text-[#22c55e]">
+            ${revenueData.monthlyRevenue.toLocaleString()}
+          </p>
+          <p className="text-sm text-[#16a34a]">
+            +{revenueData.monthlyGrowth}% from last month
+          </p>
+        </div>
+
+        {/* Yearly Revenue Card */}
+        <div className="bg-[#f0fdf4] p-4 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">
+            Yearly Revenue
+          </h3>
+          <p className="text-2xl font-bold text-[#22c55e]">
+            ${revenueData.yearlyRevenue.toLocaleString()}
+          </p>
+          <p className="text-sm text-[#16a34a]">
+            +{revenueData.yearlyGrowth}% from last year
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map(({ key, name, color, icon }) => (
-          <div
-            key={key}
-            className={`${color} text-white p-6 rounded-lg shadow-lg flex items-center space-x-4`}
-          >
-            <div className="text-3xl">{icon}</div>
-            <div>
-              <h2 className="text-2xl font-semibold">{name}</h2>
-              <p className="text-lg">
-                {revenueData[key] !== null
-                  ? `Revenue: ${formatCurrency(revenueData[key])}`
-                  : "Loading..."}
-              </p>
-            </div>
+      {/* Revenue Chart Placeholder */}
+      <div className="mt-8">
+        <div className="bg-[#f0fdf4] p-6 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">
+            Revenue Chart
+          </h3>
+          <div className="mt-4 h-64 bg-[#dcfce7] rounded-lg flex items-center justify-center">
+            <span className="text-[#16a34a]">Chart Placeholder</span>
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );

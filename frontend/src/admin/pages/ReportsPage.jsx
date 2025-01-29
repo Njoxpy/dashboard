@@ -1,180 +1,135 @@
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { FileDown, Search, Filter } from "lucide-react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const ReportsPage = () => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedReport, setSelectedReport] = useState("userActivity");
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 5;
 
-  const categories = [
-    "Animal Feeding",
-    "Fresh Oil",
-    "Godown",
-    "Hardware",
-    "Printing",
-    "Stationery",
-  ];
+  const reportData = {
+    userActivity: [
+      { id: 1, name: "John Doe", action: "Logged in", date: "2025-01-29" },
+      {
+        id: 2,
+        name: "Jane Smith",
+        action: "Updated profile",
+        date: "2025-01-28",
+      },
+      { id: 3, name: "Alice Brown", action: "Logged out", date: "2025-01-27" },
+    ],
+    sales: [
+      { id: 1, item: "Laptop", amount: "$1200", date: "2025-01-25" },
+      { id: 2, item: "Phone", amount: "$800", date: "2025-01-24" },
+    ],
+    logs: [
+      {
+        id: 1,
+        event: "System Rebooted",
+        status: "Success",
+        date: "2025-01-26",
+      },
+      {
+        id: 2,
+        event: "Database Backup",
+        status: "Completed",
+        date: "2025-01-23",
+      },
+    ],
+  };
 
-  const handleGenerateReport = async () => {
-    if (!startDate || !endDate || !selectedCategory) {
-      toast.error("Please select all fields", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-      return;
-    }
+  const reports = reportData[selectedReport].filter((report) =>
+    JSON.stringify(report).toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/${selectedCategory
-          .toLowerCase()
-          .replace(
-            " ",
-            "-"
-          )}/reports?startDate=${startDate}&endDate=${endDate}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/pdf",
-          },
-        }
-      );
+  const totalPages = Math.ceil(reports.length / reportsPerPage);
+  const paginatedReports = reports.slice(
+    (currentPage - 1) * reportsPerPage,
+    currentPage * reportsPerPage
+  );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to generate report");
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${selectedCategory
-        .toLowerCase()
-        .replace(" ", "_")}_report.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      toast.success("Report generated successfully!", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    } catch (error) {
-      console.error("Report generation error:", error);
-      toast.error(
-        error.message ||
-          "Failed to generate report. Please check your network.",
-        {
-          position: "top-center",
-          autoClose: 3000,
-        }
-      );
-    } finally {
-      setLoading(false);
-    }
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Report Export", 14, 10);
+    const tableData = paginatedReports.map((report) => Object.values(report));
+    doc.autoTable({
+      head: [Object.keys(paginatedReports[0])],
+      body: tableData,
+    });
+    doc.save("report.pdf");
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 min-h-screen">
-      <ToastContainer />
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden p-8">
-        <h2 className="text-4xl font-extrabold text-center text-green-700 mb-10">
-          Generate Report
-        </h2>
+    <div className="p-6 bg-green-50 shadow-md rounded-lg">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-2">
+          <select
+            className="border p-2 rounded-lg bg-green-100 text-green-800"
+            value={selectedReport}
+            onChange={(e) => setSelectedReport(e.target.value)}
+          >
+            <option value="userActivity">User Activity</option>
+            <option value="sales">Sales</option>
+            <option value="logs">Logs</option>
+          </select>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search report..."
+              className="border p-2 pl-8 rounded-lg bg-green-100 text-green-800"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Search
+              className="absolute left-2 top-2.5 text-green-500"
+              size={16}
+            />
+          </div>
+        </div>
+        <button
+          onClick={exportToPDF}
+          className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+        >
+          <FileDown size={16} /> Export PDF
+        </button>
+      </div>
 
-        {/* Category Selection */}
-        <div className="mb-8">
-          <h3 className="text-lg font-semibold text-green-700 mb-4">
-            Select Category
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`p-4 rounded-lg transition-all transform hover:scale-105 ${
-                  selectedCategory === category
-                    ? "bg-green-600 text-white shadow-lg"
-                    : "bg-green-100 text-green-700 hover:bg-green-200"
-                }`}
-              >
-                {category}
-              </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {paginatedReports.map((report) => (
+          <div
+            key={report.id}
+            className="p-4 border rounded-lg shadow-md bg-green-100 text-green-800"
+          >
+            {Object.entries(report).map(([key, value]) => (
+              <p key={key} className="text-sm">
+                <strong>{key}:</strong> {value}
+              </p>
             ))}
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Date Range Inputs */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-green-700 mb-4">
-            Select Date Range
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-green-700 mb-2">
-                Start Date
-              </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full p-3 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-green-700 mb-2">
-                End Date
-              </label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full p-3 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Generate Report Button */}
+      <div className="flex justify-between items-center mt-4">
         <button
-          onClick={handleGenerateReport}
-          disabled={loading || !selectedCategory}
-          className={`w-full p-4 rounded-lg text-lg font-semibold transition-all ${
-            selectedCategory && !loading
-              ? "bg-green-600 text-white hover:bg-green-700 hover:shadow-lg"
-              : "bg-green-300 cursor-not-allowed"
-          }`}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 border rounded-lg bg-green-200 hover:bg-green-300 disabled:opacity-50"
         >
-          {loading ? (
-            <span className="flex items-center justify-center">
-              <svg
-                className="animate-spin h-5 w-5 mr-3 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Generating...
-            </span>
-          ) : (
-            "Generate Report"
-          )}
+          Previous
+        </button>
+        <span className="text-green-800">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 border rounded-lg bg-green-200 hover:bg-green-300 disabled:opacity-50"
+        >
+          Next
         </button>
       </div>
     </div>
