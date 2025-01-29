@@ -18,13 +18,14 @@ import DashboardOverview from "./admin/pages/DashboardOverview";
 import Messages from "./admin/components/Messages";
 import Settings from "./admin/components/Settings";
 import Support from "./admin/components/Support";
+import ProfilePage from "./admin/components/ProfilePage";
 
 // Router
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="admin/*" element={<DashboardLayout />}>
-        <Route index element={<DashboardHome />} />
+        <Route index element={<DashboardOverview />} />
         <Route path="users" element={<UsersPage />} />
         <Route path="dashboard" element={<DashboardOverview />} />
         <Route path="users/create" element={<AddUserPage />} />
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
         <Route path="settings" element={<Settings />} />
         <Route path="support" element={<Support />} />
         <Route path="logs" element={<AuditLogs />} />
+        <Route path="profile" element={<ProfilePage />} />
         <Route path="Orders-Cost" element={<OrdersCostDashboard />} />
       </Route>
     </Route>
