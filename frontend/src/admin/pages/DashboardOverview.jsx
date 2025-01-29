@@ -47,31 +47,31 @@ const DashboardOverview = () => {
 
   const recentActivity = [
     {
-      user: "John Doe",
+      user: "Godbless Nyagawa",
       action: "Created new account",
       time: "2 minutes ago",
       type: "account",
     },
     {
-      user: "Sarah Smith",
+      user: "Queen Mello",
       action: "Placed new order #1234",
       time: "1 hour ago",
       type: "order",
     },
     {
-      user: "Mike Johnson",
+      user: "Isaac Mwasalemba",
       action: "Updated profile",
       time: "3 hours ago",
       type: "profile",
     },
     {
-      user: "Emily Brown",
+      user: "Kelvin Chui",
       action: "Submitted support ticket",
       time: "5 hours ago",
       type: "support",
     },
     {
-      user: "Alex Wilson",
+      user: "Adama Traore",
       action: "Made a purchase",
       time: "6 hours ago",
       type: "purchase",
@@ -79,10 +79,10 @@ const DashboardOverview = () => {
   ];
 
   const topProducts = [
-    { name: "Product A", sales: 234, revenue: "$2,345" },
-    { name: "Product B", sales: 187, revenue: "$1,987" },
-    { name: "Product C", sales: 156, revenue: "$1,756" },
-    { name: "Product D", sales: 124, revenue: "$1,234" },
+    { name: "Fresh Oil", sales: 234, revenue: "Tsh25,000" },
+    { name: "Mchele", sales: 187, revenue: "Tsh11,000" },
+    { name: "Viazi", sales: 156, revenue: "Tsh12,000" },
+    { name: "Carot", sales: 124, revenue: "Tsh15,200" },
   ];
 
   return (
