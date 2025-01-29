@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Users,
   DollarSign,
@@ -7,36 +8,6 @@ import {
   ArrowDownRight,
   Activity,
 } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-} from "recharts";
-
-const revenueData = [
-  { name: "Jan", value: 4000 },
-  { name: "Feb", value: 3000 },
-  { name: "Mar", value: 5000 },
-  { name: "Apr", value: 4500 },
-  { name: "May", value: 6000 },
-  { name: "Jun", value: 5500 },
-];
-
-const userActivityData = [
-  { name: "Mon", active: 120, new: 20 },
-  { name: "Tue", active: 132, new: 25 },
-  { name: "Wed", active: 145, new: 30 },
-  { name: "Thu", active: 140, new: 22 },
-  { name: "Fri", active: 160, new: 28 },
-  { name: "Sat", active: 150, new: 24 },
-  { name: "Sun", active: 138, new: 18 },
-];
 
 const DashboardOverview = () => {
   const stats = [
@@ -74,6 +45,46 @@ const DashboardOverview = () => {
     },
   ];
 
+  const recentActivity = [
+    {
+      user: "John Doe",
+      action: "Created new account",
+      time: "2 minutes ago",
+      type: "account",
+    },
+    {
+      user: "Sarah Smith",
+      action: "Placed new order #1234",
+      time: "1 hour ago",
+      type: "order",
+    },
+    {
+      user: "Mike Johnson",
+      action: "Updated profile",
+      time: "3 hours ago",
+      type: "profile",
+    },
+    {
+      user: "Emily Brown",
+      action: "Submitted support ticket",
+      time: "5 hours ago",
+      type: "support",
+    },
+    {
+      user: "Alex Wilson",
+      action: "Made a purchase",
+      time: "6 hours ago",
+      type: "purchase",
+    },
+  ];
+
+  const topProducts = [
+    { name: "Product A", sales: 234, revenue: "$2,345" },
+    { name: "Product B", sales: 187, revenue: "$1,987" },
+    { name: "Product C", sales: 156, revenue: "$1,756" },
+    { name: "Product D", sales: 124, revenue: "$1,234" },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
@@ -103,98 +114,76 @@ const DashboardOverview = () => {
         ))}
       </div>
 
-      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Chart */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        {/* Top Products */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Revenue Overview</h2>
-            <div className="flex items-center space-x-2">
-              <Activity className="h-5 w-5 text-gray-500" />
-              <span className="text-sm text-gray-500">Last 6 months</span>
-            </div>
+            <h2 className="text-lg font-semibold">Top Products</h2>
+            <span className="text-sm text-gray-500">Last 30 days</span>
           </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="space-y-4">
+            {topProducts.map((product, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between py-3 border-b last:border-0"
+              >
+                <div>
+                  <p className="font-medium">{product.name}</p>
+                  <p className="text-sm text-gray-500">{product.sales} sales</p>
+                </div>
+                <span className="font-semibold text-green-600">
+                  {product.revenue}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* User Activity Chart */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        {/* Recent Activity */}
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">User Activity</h2>
-            <div className="flex items-center space-x-2">
-              <Users className="h-5 w-5 text-gray-500" />
-              <span className="text-sm text-gray-500">Weekly overview</span>
-            </div>
+            <h2 className="text-lg font-semibold">Recent Activity</h2>
+            <span className="text-sm text-gray-500">Today</span>
           </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={userActivityData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="active" fill="#3b82f6" name="Active Users" />
-                <Bar dataKey="new" fill="#10b981" name="New Users" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="space-y-4">
+            {recentActivity.map((activity, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between py-3 border-b last:border-0"
+              >
+                <div>
+                  <p className="font-medium">{activity.user}</p>
+                  <p className="text-sm text-gray-500">{activity.action}</p>
+                </div>
+                <span className="text-sm text-gray-500">{activity.time}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Recent Activity Section */}
+      {/* Quick Stats */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-        <div className="space-y-4">
-          {[
-            {
-              user: "John Doe",
-              action: "Created new account",
-              time: "2 minutes ago",
-            },
-            {
-              user: "Sarah Smith",
-              action: "Placed new order #1234",
-              time: "1 hour ago",
-            },
-            {
-              user: "Mike Johnson",
-              action: "Updated profile",
-              time: "3 hours ago",
-            },
-            {
-              user: "Emily Brown",
-              action: "Submitted support ticket",
-              time: "5 hours ago",
-            },
-          ].map((activity, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between py-3 border-b last:border-0"
-            >
-              <div>
-                <p className="font-medium">{activity.user}</p>
-                <p className="text-sm text-gray-500">{activity.action}</p>
-              </div>
-              <span className="text-sm text-gray-500">{activity.time}</span>
-            </div>
-          ))}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Quick Stats</h2>
+          <Activity className="h-5 w-5 text-gray-500" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-blue-50 rounded-lg">
+            <h3 className="text-blue-600 font-medium">Active Users</h3>
+            <p className="text-2xl font-bold mt-2">1,234</p>
+            <p className="text-sm text-gray-500 mt-1">Online now</p>
+          </div>
+          <div className="p-4 bg-green-50 rounded-lg">
+            <h3 className="text-green-600 font-medium">Success Rate</h3>
+            <p className="text-2xl font-bold mt-2">98.2%</p>
+            <p className="text-sm text-gray-500 mt-1">Last 24 hours</p>
+          </div>
+          <div className="p-4 bg-purple-50 rounded-lg">
+            <h3 className="text-purple-600 font-medium">Response Time</h3>
+            <p className="text-2xl font-bold mt-2">1.2s</p>
+            <p className="text-sm text-gray-500 mt-1">Average</p>
+          </div>
         </div>
       </div>
     </div>
