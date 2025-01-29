@@ -14,6 +14,7 @@ import AddUserPage from "./admin/components/AddUserPage";
 import RevenueDashboard from "./admin/pages/RevenueDashboard";
 import AuditLogs from "./admin/components/AuditLogs";
 import OrdersCostDashboard from "./admin/pages/OrdersCostDashboard";
+import DashboardOverview from "./admin/pages/DashboardOverview";
 
 // Router
 const router = createBrowserRouter(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
       <Route path="admin/*" element={<DashboardLayout />}>
         <Route index element={<DashboardHome />} />
         <Route path="users" element={<UsersPage />} />
+        <Route path="dashboard" element={<DashboardOverview />} />
         <Route path="users/create" element={<AddUserPage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="revenue" element={<RevenueDashboard />} />
