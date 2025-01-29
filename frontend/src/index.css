@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* hello section image */
+.njox {
+    background-image: url(./assets/images/chai.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    object-fit: cover;
+    padding: 80px 0;
+    background-blend-mode: multiply;
+}
+
+/* about page image */
+.about-image {
+    background-image: url(./assets/images/biringanya.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    object-fit: cover;
+    padding: 100px 0;
+    background-blend-mode: multiply;
+}
+
+/* center latest blogs */
+.bloglist-center {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* fixed footer at bottom */
+.footer-mh {
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+}
+
+.margin {
+    margin: 47px;
+}
+
+
+@media (min-width: 640px) {
+    .njox {
+        padding: 100px 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .njox {
+        padding: 120px 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .njox {
+        padding: 150px 0;
+    }
+}
