@@ -1,4 +1,26 @@
 import React from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const RevenueDashboard = () => {
   // Hardcoded data
@@ -9,6 +31,23 @@ const RevenueDashboard = () => {
     totalGrowth: 5.2,
     monthlyGrowth: 2.8,
     yearlyGrowth: 10.5,
+  };
+
+  // Chart data
+  const chartData = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"], // example months
+    datasets: [
+      {
+        label: "Monthly Revenue ($)",
+        data: [20000, 22000, 25000, 23000, 26000, 27000, 28000], // example data for each month
+        fill: false,
+        borderColor: "#22c55e",
+        tension: 0.1,
+        pointBackgroundColor: "#22c55e",
+        pointBorderColor: "#22c55e",
+        pointHoverBackgroundColor: "#22c55e",
+      },
+    ],
   };
 
   return (
@@ -58,14 +97,14 @@ const RevenueDashboard = () => {
         </div>
       </div>
 
-      {/* Revenue Chart Placeholder */}
+      {/* Revenue Chart */}
       <div className="mt-8">
         <div className="bg-[#f0fdf4] p-6 rounded-lg">
           <h3 className="text-lg font-semibold text-[#166534]">
             Revenue Chart
           </h3>
-          <div className="mt-4 h-64 bg-[#dcfce7] rounded-lg flex items-center justify-center">
-            <span className="text-[#16a34a]">Chart Placeholder</span>
+          <div className="mt-4 h-64">
+            <Line data={chartData} />
           </div>
         </div>
       </div>

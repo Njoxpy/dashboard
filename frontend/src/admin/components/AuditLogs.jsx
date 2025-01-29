@@ -1,148 +1,199 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
+// Sample audit log data
+const auditLogs = [
+  {
+    id: 1,
+    action: "User created",
+    user: "admin@example.com",
+    timestamp: "2025-01-29 09:00 AM",
+  },
+  {
+    id: 2,
+    action: "User updated",
+    user: "user1@example.com",
+    timestamp: "2025-01-28 04:30 PM",
+  },
+  {
+    id: 3,
+    action: "User deleted",
+    user: "test@example.com",
+    timestamp: "2025-01-27 11:15 AM",
+  },
+  {
+    id: 4,
+    action: "Password changed",
+    user: "admin@example.com",
+    timestamp: "2025-01-26 08:45 AM",
+  },
+  {
+    id: 5,
+    action: "Role updated",
+    user: "moderator@example.com",
+    timestamp: "2025-01-25 02:10 PM",
+  },
+  {
+    id: 6,
+    action: "User created",
+    user: "newuser@example.com",
+    timestamp: "2025-01-24 05:30 PM",
+  },
+  {
+    id: 7,
+    action: "User suspended",
+    user: "spamuser@example.com",
+    timestamp: "2025-01-23 01:00 PM",
+  },
+  {
+    id: 8,
+    action: "User activated",
+    user: "inactive@example.com",
+    timestamp: "2025-01-22 09:20 AM",
+  },
+  {
+    id: 9,
+    action: "Email updated",
+    user: "user2@example.com",
+    timestamp: "2025-01-21 07:50 PM",
+  },
+  {
+    id: 10,
+    action: "User deleted",
+    user: "olduser@example.com",
+    timestamp: "2025-01-20 03:25 PM",
+  },
+  {
+    id: 11,
+    action: "User created",
+    user: "john@example.com",
+    timestamp: "2025-01-19 06:40 AM",
+  },
+  {
+    id: 12,
+    action: "User updated",
+    user: "admin@example.com",
+    timestamp: "2025-01-18 10:15 PM",
+  },
+  {
+    id: 13,
+    action: "User suspended",
+    user: "banned@example.com",
+    timestamp: "2025-01-17 12:30 PM",
+  },
+  {
+    id: 14,
+    action: "User activated",
+    user: "restored@example.com",
+    timestamp: "2025-01-16 04:00 PM",
+  },
+  {
+    id: 15,
+    action: "Password reset",
+    user: "user3@example.com",
+    timestamp: "2025-01-15 08:10 AM",
+  },
+  {
+    id: 16,
+    action: "Role updated",
+    user: "staff@example.com",
+    timestamp: "2025-01-14 05:45 PM",
+  },
+  {
+    id: 17,
+    action: "User deleted",
+    user: "tester@example.com",
+    timestamp: "2025-01-13 02:20 AM",
+  },
+  {
+    id: 18,
+    action: "User created",
+    user: "developer@example.com",
+    timestamp: "2025-01-12 11:55 AM",
+  },
+  {
+    id: 19,
+    action: "User updated",
+    user: "admin@example.com",
+    timestamp: "2025-01-11 09:35 PM",
+  },
+  {
+    id: 20,
+    action: "Email updated",
+    user: "user4@example.com",
+    timestamp: "2025-01-10 07:25 AM",
+  },
+];
 
 const AuditLogs = () => {
-  const [logs, setLogs] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
+  const logsPerPage = 5; // Number of logs per page
   const [currentPage, setCurrentPage] = useState(1);
 
-  const logsPerPage = 10;
-
-  // Simulated audit log data
-  const mockLogs = [
-    { id: 1, user: "admin", action: "Logged in", date: "2025-01-28T09:00:00Z" },
-    {
-      id: 2,
-      user: "johndoe",
-      action: "Updated profile",
-      date: "2025-01-27T12:15:00Z",
-    },
-    {
-      id: 3,
-      user: "janedoe",
-      action: "Deleted post",
-      date: "2025-01-25T15:30:00Z",
-    },
-    {
-      id: 4,
-      user: "admin",
-      action: "Created new user",
-      date: "2025-01-24T08:00:00Z",
-    },
-    // Add more mock entries as needed
-  ];
-
-  useEffect(() => {
-    // Simulate loading state and data fetching
-    setLoading(true);
-    setTimeout(() => {
-      setLogs(mockLogs);
-      setLoading(false);
-    }, 1000); // Simulate API call delay
-  }, []);
-
-  const filteredLogs = logs.filter(
-    (log) =>
-      log.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.action.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Pagination logic
+  // Get the logs for the current page
   const indexOfLastLog = currentPage * logsPerPage;
   const indexOfFirstLog = indexOfLastLog - logsPerPage;
-  const currentLogs = filteredLogs.slice(indexOfFirstLog, indexOfLastLog);
+  const currentLogs = auditLogs.slice(indexOfFirstLog, indexOfLastLog);
 
-  const totalPages = Math.ceil(filteredLogs.length / logsPerPage);
+  // Handle page change
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
+  // Calculate total pages
+  const totalPages = Math.ceil(auditLogs.length / logsPerPage);
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-3xl font-semibold mb-6">Audit Logs</h2>
-
-      {/* Search Bar */}
-      <div className="mb-4 flex justify-between items-center">
-        <input
-          type="text"
-          placeholder="Search by user or action"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-2 border border-gray-300 rounded-md w-1/3"
-        />
-      </div>
-
-      {/* Loading Spinner */}
-      {loading ? (
-        <div className="flex justify-center items-center">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <div className="overflow-x-auto shadow-md rounded-lg">
-          <table className="min-w-full table-auto">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="py-2 px-4 text-left">User</th>
-                <th className="py-2 px-4 text-left">Action</th>
-                <th className="py-2 px-4 text-left">Date</th>
-                <th className="py-2 px-4 text-left">Details</th>
+    <div className="min-h-screen bg-gray-100 p-5">
+      <h1 className="text-3xl font-bold text-green-600 mb-6">Audit Logs</h1>
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Action
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                User
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Timestamp
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {currentLogs.map((log) => (
+              <tr key={log.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                  {log.action}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  {log.user}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {log.timestamp}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {currentLogs.length > 0 ? (
-                currentLogs.map((log) => (
-                  <tr key={log.id} className="border-b hover:bg-gray-50">
-                    <td className="py-2 px-4">{log.user}</td>
-                    <td className="py-2 px-4">{log.action}</td>
-                    <td className="py-2 px-4">
-                      {new Date(log.date).toLocaleString()}
-                    </td>
-                    <td className="py-2 px-4">
-                      <button
-                        className="text-blue-500 hover:text-blue-700"
-                        onClick={() => alert(`Details for log ID: ${log.id}`)}
-                      >
-                        View Details
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="py-2 px-4 text-center">
-                    No logs found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-between items-center mt-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:bg-gray-300"
-        >
-          Previous
-        </button>
-        <span className="text-sm">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:bg-gray-300"
-        >
-          Next
-        </button>
+        {/* Pagination Controls */}
+        <div className="mt-4 flex justify-center space-x-4">
+          <button
+            className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg"
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="flex items-center text-sm text-gray-700">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg"
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

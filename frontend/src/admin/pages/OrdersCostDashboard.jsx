@@ -1,134 +1,195 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { FileDown, Search } from "lucide-react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const OrdersCostDashboard = () => {
-  const [ordersCostData, setOrdersCostData] = useState({
-    animalFeeding: null,
-    freshOil: null,
-    godown: null,
-    hardware: null,
-    stationery: null,
-    printing: null,
-  });
-  const [period, setPeriod] = useState("week");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 5;
 
-  const fetchOrdersCostData = async (category, period) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/${category}/total-orders?filter=${period}`,
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      return data.totalCost;
-    } catch (error) {
-      console.error(`Error fetching ${category} orders cost:`, error);
-      return "Error fetching data";
-    }
-  };
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("sw-TZ", {
-      style: "currency",
-      currency: "TZS",
-    }).format(value);
-  };
-
-  useEffect(() => {
-    const loadOrdersCostData = async () => {
-      const animalFeeding = await fetchOrdersCostData("animal-feeding", period);
-      const freshOil = await fetchOrdersCostData("fresh-oil", period);
-      const godown = await fetchOrdersCostData("godown", period);
-      const hardware = await fetchOrdersCostData("hardware", period);
-      const stationery = await fetchOrdersCostData("stationery", period);
-      const printing = await fetchOrdersCostData("printing", period);
-
-      setOrdersCostData({
-        animalFeeding,
-        freshOil,
-        godown,
-        hardware,
-        stationery,
-        printing,
-      });
-    };
-
-    loadOrdersCostData();
-  }, [period]);
-
-  const categories = [
-    {
-      key: "animalFeeding",
-      name: "Animal Feeding",
-      color: "bg-green-500",
-      icon: "🌿",
-    },
-    {
-      key: "freshOil",
-      name: "Fresh Oil",
-      color: "bg-yellow-500",
-      icon: "🛢️",
-    },
-    {
-      key: "godown",
-      name: "Godown",
-      color: "bg-indigo-500",
-      icon: "🏢",
-    },
-    {
-      key: "hardware",
-      name: "Hardware",
-      color: "bg-blue-500",
-      icon: "🔧",
-    },
-    {
-      key: "stationery",
-      name: "Stationery",
-      color: "bg-blue-400",
-      icon: "✏️",
-    },
-    {
-      key: "printing",
-      name: "Printing",
-      color: "bg-blue-600",
-      icon: "📃",
-    },
+  // Example orders data (replace with dynamic data as needed)
+  const ordersData = [
+    { id: 1, orderId: "ORD001", cost: 1200, date: "2025-01-29" },
+    { id: 2, orderId: "ORD002", cost: 800, date: "2025-01-28" },
+    { id: 3, orderId: "ORD003", cost: 600, date: "2025-01-27" },
+    { id: 4, orderId: "ORD004", cost: 1500, date: "2025-01-26" },
+    { id: 5, orderId: "ORD005", cost: 2200, date: "2025-01-25" },
+    // Add more orders as needed
   ];
 
-  return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-5xl font-extrabold text-center text-gray-900 mb-12">
-        Total Orders Cost Dashboard
-      </h1>
+  const filteredOrders = ordersData.filter((order) =>
+    JSON.stringify(order).toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-      {/* Dropdown for selecting period */}
-      <div className="flex justify-center mb-6">
-        <select
-          className="border border-gray-300 rounded-lg p-3 text-lg bg-white shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-          value={period}
-          onChange={(e) => setPeriod(e.target.value)}
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * ordersPerPage,
+    currentPage * ordersPerPage
+  );
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Orders Cost Report", 14, 10);
+    const tableData = paginatedOrders.map((order) => Object.values(order));
+    doc.autoTable({
+      head: [Object.keys(paginatedOrders[0])],
+      body: tableData,
+    });
+    doc.save("orders-cost-report.pdf");
+  };
+
+  // Chart data
+  const chartData = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"], // example months
+    datasets: [
+      {
+        label: "Order Cost ($)",
+        data: [1200, 1500, 1600, 1800, 1700, 1900, 2100], // example order costs for each month
+        fill: false,
+        borderColor: "#22c55e",
+        tension: 0.1,
+        pointBackgroundColor: "#22c55e",
+        pointBorderColor: "#22c55e",
+        pointHoverBackgroundColor: "#22c55e",
+      },
+    ],
+  };
+
+  return (
+    <div className="p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">
+        Orders Cost Overview
+      </h2>
+
+      {/* Filters and Export */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-2">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search orders..."
+              className="border p-2 pl-8 rounded-lg bg-green-100 text-green-800"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Search
+              className="absolute left-2 top-2.5 text-green-500"
+              size={16}
+            />
+          </div>
+        </div>
+        <button
+          onClick={exportToPDF}
+          className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
         >
-          <option value="day">Day</option>
-          <option value="week">Week</option>
-          <option value="month">Month</option>
-        </select>
+          <FileDown size={16} /> Export PDF
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map(({ key, name, color, icon }) => (
+      {/* Orders Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+        <div className="bg-[#f0fdf4] p-4 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">Total Cost</h3>
+          <p className="text-2xl font-bold text-[#22c55e]">
+            $
+            {ordersData
+              .reduce((acc, order) => acc + order.cost, 0)
+              .toLocaleString()}
+          </p>
+        </div>
+
+        <div className="bg-[#f0fdf4] p-4 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">Monthly Cost</h3>
+          <p className="text-2xl font-bold text-[#22c55e]">
+            $
+            {ordersData
+              .slice(0, 1)
+              .reduce((acc, order) => acc + order.cost, 0)
+              .toLocaleString()}
+          </p>
+        </div>
+
+        <div className="bg-[#f0fdf4] p-4 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">Yearly Cost</h3>
+          <p className="text-2xl font-bold text-[#22c55e]">
+            $
+            {ordersData
+              .reduce((acc, order) => acc + order.cost, 0)
+              .toLocaleString()}
+          </p>
+        </div>
+      </div>
+
+      {/* Revenue Chart */}
+      <div className="mt-8">
+        <div className="bg-[#f0fdf4] p-6 rounded-lg">
+          <h3 className="text-lg font-semibold text-[#166534]">
+            Orders Cost Chart
+          </h3>
+          <div className="mt-4 h-64">
+            <Line data={chartData} />
+          </div>
+        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-6">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 border rounded-lg bg-green-200 hover:bg-green-300 disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="text-green-800">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 border rounded-lg bg-green-200 hover:bg-green-300 disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+
+      {/* Orders List */}
+      <div className="mt-6">
+        {paginatedOrders.map((order) => (
           <div
-            key={key}
-            className={`${color} text-white p-6 rounded-lg shadow-lg flex items-center space-x-4`}
+            key={order.id}
+            className="bg-[#f0fdf4] p-4 rounded-lg mb-4 shadow-lg"
           >
-            <div className="text-3xl">{icon}</div>
-            <div>
-              <h2 className="text-2xl font-semibold">{name}</h2>
-              <p className="text-lg">
-                {ordersCostData[key] !== null
-                  ? `Total Orders Cost: ${formatCurrency(ordersCostData[key])}`
-                  : "Loading..."}
-              </p>
-            </div>
+            <p className="text-lg font-semibold text-[#166534]">
+              Order ID: {order.orderId}
+            </p>
+            <p className="text-sm">Cost: ${order.cost.toLocaleString()}</p>
+            <p className="text-sm text-gray-600">Date: {order.date}</p>
           </div>
         ))}
       </div>

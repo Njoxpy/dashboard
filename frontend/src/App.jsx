@@ -15,6 +15,9 @@ import RevenueDashboard from "./admin/pages/RevenueDashboard";
 import AuditLogs from "./admin/components/AuditLogs";
 import OrdersCostDashboard from "./admin/pages/OrdersCostDashboard";
 import DashboardOverview from "./admin/pages/DashboardOverview";
+import Messages from "./admin/components/Messages";
+import Settings from "./admin/components/Settings";
+import Support from "./admin/components/Support";
 
 // Router
 const router = createBrowserRouter(
@@ -27,6 +30,9 @@ const router = createBrowserRouter(
         <Route path="users/create" element={<AddUserPage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="revenue" element={<RevenueDashboard />} />
+        <Route path="messages" element={<Messages />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="support" element={<Support />} />
         <Route path="logs" element={<AuditLogs />} />
         <Route path="Orders-Cost" element={<OrdersCostDashboard />} />
       </Route>
