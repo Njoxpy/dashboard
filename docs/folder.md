@@ -1,0 +1,35 @@
+```sh
+/backend
+  /controllers
+    dashboardController.js
+    userController.js
+    reportController.js
+    revenueController.js
+    logController.js
+    orderController.js
+    settingsController.js
+    messageController.js
+  /models
+    userModel.js
+    logModel.js
+    reportModel.js
+  /routes
+    dashboardRoutes.js
+    userRoutes.js
+    reportRoutes.js
+    revenueRoutes.js
+    logRoutes.js
+    settingsRoutes.js
+    messageRoutes.js
+  /services
+    userService.js
+    logService.js
+    reportService.js
+  /utils
+    authMiddleware.js
+    errorHandler.js
+  /config
+    db.js
+    server.js
+  app.js
+```

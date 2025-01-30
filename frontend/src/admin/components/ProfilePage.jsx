@@ -1,15 +1,15 @@
 import React, { useState } from "react";
+import Njox from "../../assets/njox.jpg";
 import { Camera, Save, Edit } from "lucide-react";
 
 const ProfilePage = () => {
   // Sample user data with profile picture URL from Pexels
   const userData = {
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: "Godbless Nyagawa",
+    email: "nyagawa@gmail.com",
     role: "Admin",
     bio: "Experienced admin with a passion for technology.",
-    profilePicture:
-      "https://images.pexels.com/photos/64385/pexels-photo-64385.jpeg", // Pexels image URL
+    profilePicture: Njox, // Pexels image URL
   };
 
   const [user, setUser] = useState(userData);

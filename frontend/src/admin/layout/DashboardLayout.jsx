@@ -75,8 +75,7 @@ const DashboardLayout = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/login");
+    console.log("bomboclat!");
   };
 
   // Enhanced navigation structure with grouping
