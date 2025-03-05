@@ -1,8 +1,9 @@
-![Welcome](./frontend/src/assets/image.png)
 
 # **General Admin Dashboard**
 
 A modern and reusable **Admin Dashboard** built with **React** and **Tailwind CSS**. This dashboard offers various administrative functionalities, including user management, system stats, reports, and more. The project leverages **React Router** for navigation and is designed to be scalable, flexible, and easy to integrate into any project.
+
+![Welcome](./frontend/src/assets/image.png)
 
 ---
 
