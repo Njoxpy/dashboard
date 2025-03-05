@@ -61,6 +61,8 @@ const DashboardLayout = () => {
         return "Analytics Reports";
       case "/admin/revenue":
         return "Revenue Analytics";
+      case "/admin/contents":
+        return "Content Management";
       case "/admin/logs":
         return "System Logs";
       case "/admin/orders-cost":
@@ -125,6 +127,16 @@ const DashboardLayout = () => {
           path: "/admin/orders-cost",
           label: "Orders & Costs",
           icon: <ShoppingCart size={20} />,
+        },
+      ],
+    },
+    {
+      group: "Content",
+      items: [
+        {
+          path: "/admin/contents",
+          label: "Content Management",
+          icon: <FileText size={20} />,
         },
       ],
     },

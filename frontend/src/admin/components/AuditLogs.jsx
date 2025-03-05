@@ -125,7 +125,7 @@ const auditLogs = [
 ];
 
 const AuditLogs = () => {
-  const logsPerPage = 5; // Number of logs per page
+  const logsPerPage = 10; // Number of logs per page
   const [currentPage, setCurrentPage] = useState(1);
 
   // Get the logs for the current page

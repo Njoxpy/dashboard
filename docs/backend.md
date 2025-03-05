@@ -237,4 +237,4 @@ Make sure that errors are handled properly, and provide feedback in the response
 
 ---
 
-With the above structure, end users should be able to easily clone the repository, configure their environment, and start using the backend API. The modular structure will also allow them to scale and add new features without disrupting the existing codebase.
+With the above structure, end users should be able to easily clone the repository, configure their environment, and start using the backend API. The modular structure will also allow them to scale and add new features without disrupting the existing codebase and guide.
