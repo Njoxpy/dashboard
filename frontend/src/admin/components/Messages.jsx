@@ -47,13 +47,57 @@ const sampleMessages = [
     timestamp: "2025-01-25 06:30 AM",
     read: false,
   },
-  // Add more sample messages here...
+  {
+    id: 6,
+    name: "Michael Mwinyi",
+    email: "michaelmwinyi@example.com",
+    subject: "Swala la malipo",
+    message: "Nimeshtukiwa kwa malipo mara mbili kwa ajili ya usajili moja.",
+    timestamp: "2025-03-05 09:00 AM",
+    read: false,
+  },
+  {
+    id: 7,
+    name: "Amina Hassan",
+    email: "aminahassan@example.com",
+    subject: "Kizuizi cha akaunti",
+    message: "Akaunti yangu imezuiwa. Tafadhali nisaidie kuirejesha.",
+    timestamp: "2025-03-04 02:00 PM",
+    read: false,
+  },
+  {
+    id: 8,
+    name: "Juma Ali",
+    email: "jumaali@example.com",
+    subject: "Tatizo la kuingia",
+    message: "Nina matatizo ya kuingia kwenye akaunti yangu.",
+    timestamp: "2025-03-03 11:45 AM",
+    read: true,
+  },
+  {
+    id: 9,
+    name: "Zawadi Ibrahim",
+    email: "zawadiibrahim@example.com",
+    subject: "Ombi la kurejesha pesa",
+    message: "Je, naweza kupata kurejeshewa pesa kwa malipo ya ziada?",
+    timestamp: "2025-03-02 05:30 PM",
+    read: false,
+  },
+  {
+    id: 10,
+    name: "Fatima Kazi",
+    email: "fatimakazi@example.com",
+    subject: "Tatizo la akaunti",
+    message: "Sijui kwa nini siwezi kuingia kwenye akaunti yangu.",
+    timestamp: "2025-03-01 10:00 AM",
+    read: true,
+  },
 ];
 
 const AdminMessages = () => {
   const [messages, setMessages] = useState(sampleMessages);
   const [currentPage, setCurrentPage] = useState(1);
-  const [messagesPerPage] = useState(5); // Number of messages per page
+  const [messagesPerPage] = useState(10); // Number of messages per page
 
   // Calculate the index of the first and last message for the current page
   const indexOfLastMessage = currentPage * messagesPerPage;

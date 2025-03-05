@@ -1,3 +1,9 @@
+Here’s the refined **README** that includes the images you mentioned:
+
+---
+
+![Welcome](./frontend/src/assets/image.png)
+
 # **General Admin Dashboard**
 
 A modern and reusable **Admin Dashboard** built with **React** and **Tailwind CSS**. This dashboard offers various administrative functionalities, including user management, system stats, reports, and more. The project leverages **React Router** for navigation and is designed to be scalable, flexible, and easy to integrate into any project.
@@ -76,7 +82,6 @@ A modern and reusable **Admin Dashboard** built with **React** and **Tailwind CS
 
    ```bash
    git clone https://github.com/Njoxpy/dashboard
-
    cd frontend
    ```
 
@@ -169,3 +174,45 @@ If you'd like to contribute to this project, follow these steps:
 ### **Acknowledgements**
 
 This dashboard was created with the help of **React** and **Tailwind CSS**, along with **React Router** for navigation. The goal was to create a highly reusable, flexible admin dashboard that can easily be customized and deployed.
+
+---
+
+Thanks for the clarification! If your images are located in the `./frontend/src/assets/` folder, you will need to update the paths in the `README` to reflect this.
+
+Here's the updated section with the correct image paths:
+
+---
+
+## **Project Screenshots**
+
+Here are some images of the dashboard in action:
+
+### 1. **Add User Page**
+
+![Add User Page](./frontend/src/assets/addUser.png)
+
+### 2. **Loading Screen**
+
+![Loading](./frontend/src/assets/loading.png)
+
+### 3. **Main Dashboard**
+
+![Main Dashboard](./frontend/src/assets/main.png)
+
+### 4. **Messages Section**
+
+![Messages](./frontend/src/assets/messages.png)
+
+### 5. **Reports Page**
+
+![Reports](./frontend/src/assets/reports.png)
+
+### 6. **Support Page**
+
+![Support](./frontend/src/assets/support.png)
+
+### 7. **Users Page**
+
+![Users](./frontend/src/assets/users.png)
+
+---
