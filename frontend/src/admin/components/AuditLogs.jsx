@@ -159,7 +159,10 @@ const AuditLogs = () => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {currentLogs.map((log) => (
-              <tr key={log.id}>
+              <tr
+                key={log.id}
+                className="hover:bg-gray-50 transition-colors duration-200"
+              >
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
                   {log.action}
                 </td>
@@ -177,7 +180,7 @@ const AuditLogs = () => {
         {/* Pagination Controls */}
         <div className="mt-4 flex justify-center space-x-4">
           <button
-            className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg"
+            className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -187,7 +190,7 @@ const AuditLogs = () => {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg"
+            className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
           >

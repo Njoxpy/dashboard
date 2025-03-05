@@ -13,10 +13,7 @@ import { Link } from "react-router-dom";
 const UserList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const usersPerPage = 10;
-
-  // Mock user data - replace with your actual data
-  const users = [
+  const [users, setUsers] = useState([
     {
       id: 1,
       name: "Lwena Mwamwaja",
@@ -57,8 +54,10 @@ const UserList = () => {
       status: "Active",
       lastLogin: "2024-01-26",
     },
-    // Add more mock users as needed
-  ];
+  ]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [editedUser, setEditedUser] = useState(null);
+  const usersPerPage = 10;
 
   // Filter users based on search term
   const filteredUsers = users.filter(
@@ -81,6 +80,22 @@ const UserList = () => {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleEditUser = () => {
+    if (editedUser) {
+      setUsers(
+        users.map((user) => (user.id === editedUser.id ? editedUser : user))
+      );
+      setEditedUser(null);
+    }
+  };
+
+  const handleDeleteUser = () => {
+    if (selectedUser) {
+      setUsers(users.filter((user) => user.id !== selectedUser.id));
+      setSelectedUser(null);
+    }
   };
 
   return (
@@ -177,10 +192,19 @@ const UserList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end gap-2">
-                      <button className="text-blue-600 hover:text-blue-900">
+                      {/* Edit User */}
+                      <button
+                        className="text-blue-600 hover:text-blue-900"
+                        onClick={() => setEditedUser({ ...user })}
+                      >
                         <Edit2 size={18} />
                       </button>
-                      <button className="text-red-600 hover:text-red-900">
+
+                      {/* Delete User */}
+                      <button
+                        className="text-red-600 hover:text-red-900"
+                        onClick={() => setSelectedUser(user)}
+                      >
                         <Trash2 size={18} />
                       </button>
                     </div>
@@ -204,61 +228,118 @@ const UserList = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
             >
               Next
             </button>
           </div>
-          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm text-gray-700">
-                Showing{" "}
-                <span className="font-medium">{indexOfFirstUser + 1}</span> -{" "}
-                <span className="font-medium">
-                  {Math.min(indexOfLastUser, filteredUsers.length)}
-                </span>{" "}
-                of <span className="font-medium">{filteredUsers.length}</span>{" "}
-                results
-              </p>
+        </div>
+      </div>
+
+      {/* Edit User Modal */}
+      {editedUser && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-1/3">
+            <h3 className="text-lg font-semibold">Edit User</h3>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <input
+                type="text"
+                value={editedUser.name}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser, name: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg"
+              />
             </div>
-            <div>
-              <nav
-                className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                aria-label="Pagination"
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                value={editedUser.email}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser, email: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Role
+              </label>
+              <select
+                value={editedUser.role}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser, role: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg"
               >
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                {[...Array(totalPages)].map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handlePageChange(index + 1)}
-                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium
-                      ${
-                        currentPage === index + 1
-                          ? "z-10 bg-green-50 border-green-500 text-green-600"
-                          : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-                      }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-              </nav>
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+                <option value="Editor">Editor</option>
+              </select>
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Status
+              </label>
+              <select
+                value={editedUser.status}
+                onChange={(e) =>
+                  setEditedUser({ ...editedUser, status: e.target.value })
+                }
+                className="w-full px-3 py-2 border rounded-lg"
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+            <div className="mt-6 flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded-md"
+                onClick={() => setEditedUser(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-green-500 text-white rounded-md"
+                onClick={handleEditUser}
+              >
+                Save Changes
+              </button>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Delete User Confirmation */}
+      {selectedUser && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-1/3">
+            <h3 className="text-lg font-semibold">Delete User</h3>
+            <p className="mt-4">Are you sure you want to delete this user?</p>
+            <p className="mt-2 font-semibold">{selectedUser.name}</p>
+            <div className="mt-6 flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded-md"
+                onClick={() => setSelectedUser(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded-md"
+                onClick={handleDeleteUser}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
