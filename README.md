@@ -1,7 +1,3 @@
-Here’s the refined **README** that includes the images you mentioned:
-
----
-
 ![Welcome](./frontend/src/assets/image.png)
 
 # **General Admin Dashboard**
